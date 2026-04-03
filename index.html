@@ -178,8 +178,17 @@
             }
         }
 
-        .lightbox img {
+        .lightbox-content {
+            position: relative;
             max-width: 90%;
+            max-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox img {
+            max-width: 100%;
             max-height: 90vh;
             object-fit: contain;
             border-radius: 8px;
@@ -211,11 +220,69 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
+            z-index: 10;
         }
 
         .lightbox-close:hover {
             background: rgba(255, 255, 255, 0.25);
             transform: rotate(90deg);
+        }
+
+        .lightbox-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .lightbox-arrow:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .lightbox-arrow.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .lightbox-arrow.disabled:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-50%);
+        }
+
+        .lightbox-arrow-prev {
+            left: 24px;
+        }
+
+        .lightbox-arrow-next {
+            right: 24px;
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 10;
         }
 
         .lightbox-overlay {
@@ -225,6 +292,29 @@
             width: 100%;
             height: 100%;
             z-index: -1;
+        }
+
+        @media (max-width: 768px) {
+            .lightbox-arrow {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+
+            .lightbox-arrow-prev {
+                left: 12px;
+            }
+
+            .lightbox-arrow-next {
+                right: 12px;
+            }
+
+            .lightbox-close {
+                top: 12px;
+                right: 12px;
+                width: 40px;
+                height: 40px;
+            }
         }
 
         /* Responsive */
@@ -302,7 +392,24 @@
     <div class="lightbox" id="lightbox">
         <div class="lightbox-overlay" onclick="closeLightbox()"></div>
         <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-        <img id="lightboxImg" src="" alt="">
+        
+        <button class="lightbox-arrow lightbox-arrow-prev" id="lightboxPrev" onclick="showPrevImage()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="">
+        </div>
+        
+        <button class="lightbox-arrow lightbox-arrow-next" id="lightboxNext" onclick="showNextImage()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+        
+        <div class="lightbox-counter" id="lightboxCounter">1 / 1</div>
     </div>
 
     <script>
@@ -372,17 +479,72 @@
             renderGallery(data.images || []);
         }
 
+        // Lightbox state
+        let currentImageIndex = 0;
+        let allImages = [];
+
         // Open lightbox
         function openLightbox(imgSrc) {
-            const lightbox = document.getElementById('lightbox');
-            const img = document.getElementById('lightboxImg');
+            const data = loadData();
+            allImages = data.images || [];
             
-            img.src = imgSrc;
+            // Find current image index
+            currentImageIndex = allImages.findIndex(img => img.url === imgSrc);
+            if (currentImageIndex === -1) currentImageIndex = 0;
+            
+            showLightboxImage(currentImageIndex);
+            
+            const lightbox = document.getElementById('lightbox');
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
             
             // Add keyboard support
             document.addEventListener('keydown', handleLightboxKeypress);
+        }
+
+        // Show specific image in lightbox
+        function showLightboxImage(index) {
+            if (allImages.length === 0) return;
+            
+            const img = document.getElementById('lightboxImg');
+            const counter = document.getElementById('lightboxCounter');
+            const prevBtn = document.getElementById('lightboxPrev');
+            const nextBtn = document.getElementById('lightboxNext');
+            
+            // Update image
+            img.src = allImages[index].url;
+            
+            // Update counter
+            counter.textContent = `${index + 1} / ${allImages.length}`;
+            
+            // Update button states
+            if (index === 0) {
+                prevBtn.classList.add('disabled');
+            } else {
+                prevBtn.classList.remove('disabled');
+            }
+            
+            if (index === allImages.length - 1) {
+                nextBtn.classList.add('disabled');
+            } else {
+                nextBtn.classList.remove('disabled');
+            }
+        }
+
+        // Show previous image
+        function showPrevImage() {
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                showLightboxImage(currentImageIndex);
+            }
+        }
+
+        // Show next image
+        function showNextImage() {
+            if (currentImageIndex < allImages.length - 1) {
+                currentImageIndex++;
+                showLightboxImage(currentImageIndex);
+            }
         }
 
         // Close lightbox
@@ -393,12 +555,20 @@
             
             // Remove keyboard listener
             document.removeEventListener('keydown', handleLightboxKeypress);
+            
+            // Reset
+            currentImageIndex = 0;
+            allImages = [];
         }
 
         // Handle keyboard events
         function handleLightboxKeypress(e) {
             if (e.key === 'Escape') {
                 closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                showPrevImage();
+            } else if (e.key === 'ArrowRight') {
+                showNextImage();
             }
         }
 
