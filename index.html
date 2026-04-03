@@ -107,8 +107,8 @@
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 10px;
             gap: 24px;
-            grid-auto-flow: row dense;
         }
 
         .gallery-item {
@@ -197,6 +197,7 @@
 
             .gallery-grid {
                 grid-template-columns: 1fr;
+                grid-auto-rows: 10px;
             }
 
             .nav-links a {
@@ -207,12 +208,14 @@
         @media (min-width: 769px) and (max-width: 1024px) {
             .gallery-grid {
                 grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 10px;
             }
         }
 
         @media (min-width: 1025px) {
             .gallery-grid {
                 grid-template-columns: repeat(3, 1fr);
+                grid-auto-rows: 10px;
             }
         }
     </style>
@@ -301,7 +304,19 @@
                 const item = document.createElement('div');
                 item.className = 'gallery-item';
                 item.onclick = () => openLightbox(img.url);
-                item.innerHTML = `<img src="${img.url}" alt="${img.name || 'Gallery image'}" loading="lazy">`;
+                
+                const image = document.createElement('img');
+                image.src = img.url;
+                image.alt = img.name || 'Gallery image';
+                image.loading = 'lazy';
+                
+                // Calculate grid row span after image loads
+                image.onload = function() {
+                    const rowSpan = Math.ceil((this.clientHeight + 24) / 10);
+                    item.style.gridRowEnd = `span ${rowSpan}`;
+                };
+                
+                item.appendChild(image);
                 grid.appendChild(item);
             });
         }
