@@ -141,23 +141,35 @@
             padding: 40px 24px;
             text-align: center;
             margin-top: 100px;
+            width: 100%;
+            display: block;
         }
 
         footer p {
             color: #6e6e73;
             font-size: 14px;
-            margin: 0;
+            margin: 0 auto;
             line-height: 1.6;
+            text-align: center;
+            max-width: 100%;
+        }
+
+        footer p span {
+            display: inline;
         }
 
         @media (max-width: 768px) {
             footer {
                 padding: 32px 20px;
                 margin-top: 60px;
+                text-align: center;
             }
 
             footer p {
                 font-size: 13px;
+                text-align: center;
+                width: 100%;
+                padding: 0;
             }
         }
 
