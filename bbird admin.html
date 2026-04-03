@@ -62,7 +62,8 @@
             font-size: 14px;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 14px 16px;
             border: 1px solid #d2d2d7;
@@ -72,9 +73,15 @@
             transition: border-color 0.3s;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: #0071e3;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
         }
 
         .login-btn {
@@ -160,43 +167,29 @@
             font-weight: 600;
         }
 
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #d2d2d7;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .google-drive-section {
+        /* Image URL Input Section */
+        .url-input-section {
             background: #f5f5f7;
             padding: 24px;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
-        .drive-status {
+        .url-input-wrapper {
             display: flex;
-            align-items: center;
             gap: 12px;
             margin-bottom: 16px;
         }
 
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #86868b;
+        .url-input-wrapper input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 14px;
         }
 
-        .status-indicator.connected {
-            background: #34c759;
-        }
-
-        .drive-btn {
+        .add-url-btn {
             padding: 12px 24px;
             background: #0071e3;
             color: white;
@@ -205,26 +198,59 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
-            margin-right: 12px;
+            white-space: nowrap;
         }
 
-        .drive-btn:hover {
+        .add-url-btn:hover {
             background: #0077ed;
         }
 
-        .drive-btn.secondary {
-            background: white;
+        .url-help {
+            color: #6e6e73;
+            font-size: 13px;
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+
+        .url-help a {
             color: #0071e3;
-            border: 1px solid #0071e3;
+            text-decoration: none;
         }
 
-        .drive-btn.secondary:hover {
+        .url-help a:hover {
+            text-decoration: underline;
+        }
+
+        .url-examples {
+            margin-top: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid #0071e3;
+        }
+
+        .url-examples strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+            font-size: 13px;
+        }
+
+        .url-examples code {
+            display: block;
+            font-size: 12px;
+            color: #6e6e73;
             background: #f5f5f7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 4px 0;
+            word-break: break-all;
         }
 
+        /* Image Preview Gallery */
         .image-preview {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 16px;
             margin-top: 16px;
         }
@@ -232,9 +258,17 @@
         .preview-item {
             position: relative;
             aspect-ratio: 4/3;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
             background: #f5f5f7;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .preview-item:hover {
+            border-color: #0071e3;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
         .preview-item img {
@@ -243,18 +277,71 @@
             object-fit: cover;
         }
 
+        .preview-item .image-error {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #ff3b30;
+            font-size: 12px;
+            padding: 12px;
+        }
+
+        .preview-item.error img {
+            display: none;
+        }
+
+        .preview-item.error .image-error {
+            display: block;
+        }
+
         .delete-preview {
             position: absolute;
             top: 8px;
             right: 8px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 59, 48, 0.9);
+            color: white;
             border: none;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             cursor: pointer;
             font-size: 18px;
             line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .preview-item:hover .delete-preview {
+            opacity: 1;
+        }
+
+        .delete-preview:hover {
+            background: rgba(255, 69, 58, 1);
+        }
+
+        .drag-handle {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1d1d1f;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: move;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .preview-item:hover .drag-handle {
+            opacity: 1;
         }
 
         .save-btn {
@@ -307,36 +394,6 @@
             background: #ff453a;
         }
 
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            z-index: 4000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .loading-overlay.active {
-            display: flex;
-        }
-
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid #d2d2d7;
-            border-top-color: #0071e3;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         .success-message {
             position: fixed;
             top: 24px;
@@ -348,10 +405,12 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: none;
             z-index: 5000;
+            align-items: center;
+            gap: 8px;
         }
 
         .success-message.show {
-            display: block;
+            display: flex;
             animation: slideIn 0.3s ease;
         }
 
@@ -367,11 +426,6 @@
         }
 
         /* SVG Icon Styles */
-        .icon-inline {
-            vertical-align: middle;
-            display: inline-block;
-        }
-
         h1 svg {
             color: #0071e3;
         }
@@ -382,6 +436,30 @@
 
         .success-message svg {
             vertical-align: middle;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6e6e73;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+
+        .empty-state p {
+            font-size: 14px;
         }
 
         /* Responsive */
@@ -396,6 +474,14 @@
 
             .admin-header h1 {
                 font-size: 28px;
+            }
+
+            .url-input-wrapper {
+                flex-direction: column;
+            }
+
+            .image-preview {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
         }
     </style>
@@ -479,23 +565,49 @@
             </div>
         </div>
 
-        <!-- Google Drive Integration -->
+        <!-- Image URL Management -->
         <div class="admin-section">
-            <h2>จัดการภาพถ่าย (Google Drive)</h2>
-            <div class="google-drive-section">
-                <div class="drive-status">
-                    <div class="status-indicator" id="driveStatus"></div>
-                    <span id="driveStatusText">ยังไม่ได้เชื่อมต่อ Google Drive</span>
-                </div>
-                <button class="drive-btn" id="connectDriveBtn" onclick="connectGoogleDrive()">เชื่อมต่อ Google Drive</button>
-                <button class="drive-btn secondary" id="uploadDriveBtn" onclick="uploadToDrive()" style="display: none;">อัพโหลดภาพ</button>
-                <button class="drive-btn secondary" id="browseDriveBtn" onclick="browseDrive()" style="display: none;">รีเฟรช</button>
-            </div>
+            <h2>จัดการภาพถ่าย</h2>
             
+            <div class="url-input-section">
+                <div class="url-input-wrapper">
+                    <input type="url" id="imageUrlInput" placeholder="วาง URL รูปภาพที่นี่... (Google Drive, Photos, หรือ URL ใดก็ได้)" />
+                    <button class="add-url-btn" onclick="addImageFromUrl()">เพิ่มรูป</button>
+                </div>
+                
+                <div class="url-help">
+                    💡 <strong>วิธีใช้:</strong> คัดลอก URL รูปภาพจาก Google Drive, Google Photos, Imgur, หรือที่ไหนก็ได้ แล้ววางที่นี่
+                </div>
+
+                <div class="url-examples">
+                    <strong>📋 ตัวอย่าง URL ที่ใช้ได้:</strong>
+                    <code>https://drive.google.com/file/d/xxx/view</code>
+                    <code>https://lh3.googleusercontent.com/xxx</code>
+                    <code>https://i.imgur.com/xxx.jpg</code>
+                    <code>https://example.com/image.jpg</code>
+                    
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e5e7;">
+                        <strong>🔗 วิธีดึง URL จาก Google Drive:</strong><br>
+                        1. เปิดรูปใน Google Drive<br>
+                        2. คลิกขวา → <a href="#" onclick="alert('คลิก Share → Anyone with the link → Copy link'); return false;">Get link</a><br>
+                        3. เปลี่ยนเป็น "Anyone with the link"<br>
+                        4. Copy link มาวางที่นี่
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
-                <label>ภาพในโฟลเดอร์ Portfolio (ลากเพื่อเรียงลำดับ)</label>
+                <label>ภาพของคุณ (ลากเพื่อเรียงลำดับ)</label>
                 <div class="image-preview" id="imagePreview">
-                    <!-- Preview images will be inserted here -->
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                        <h3>ยังไม่มีภาพ</h3>
+                        <p>เพิ่มรูปภาพโดยวาง URL ด้านบน</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -527,47 +639,25 @@
         </button>
     </div>
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-    </div>
-
     <!-- Success Message -->
     <div class="success-message" id="successMessage">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
         บันทึกสำเร็จ!
     </div>
 
-    <!-- Google API -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://apis.google.com/js/api.js"></script>
-
     <script>
-        // Default admin credentials (เปลี่ยนได้ในหน้า Admin)
+        // Default admin credentials
         const DEFAULT_CREDENTIALS = {
             username: 'admin',
             password: 'admin123'
         };
 
-        // Google Drive Configuration
-        const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
-        const API_KEY = 'YOUR_GOOGLE_API_KEY';
-        const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
-        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-
         // Storage keys
         const STORAGE_KEY = 'portfolioData';
         const AUTH_KEY = 'adminAuth';
         const SESSION_KEY = 'adminSession';
-        const FOLDER_NAME = 'Portfolio_Photos';
-
-        let tokenClient;
-        let gapiInited = false;
-        let gisInited = false;
-        let accessToken = null;
-        let portfolioFolderId = null;
 
         // Check login status
         function checkLogin() {
@@ -584,7 +674,6 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Load saved credentials or use default
             const savedAuth = localStorage.getItem(AUTH_KEY);
             const credentials = savedAuth ? JSON.parse(savedAuth) : DEFAULT_CREDENTIALS;
             
@@ -633,9 +722,7 @@
                 `;
             }
             
-            if (data.driveImages && data.driveImages.length > 0) {
-                renderImagePreview(data.driveImages);
-            }
+            renderImagePreview(data.images || []);
         }
 
         // Load data from localStorage
@@ -648,7 +735,7 @@
                 title: 'Capturing Moments',
                 description: 'Photography is the art of frozen time, the ability to store emotion and feelings within a frame.',
                 footer: 'My Photography Portfolio',
-                driveImages: []
+                images: []
             };
         }
 
@@ -699,179 +786,59 @@
             window.tempLogoImage = null;
         }
 
-        // Initialize GAPI
-        function gapiLoaded() {
-            gapi.load('client', initializeGapiClient);
-        }
-
-        async function initializeGapiClient() {
-            await gapi.client.init({
-                apiKey: API_KEY,
-                discoveryDocs: DISCOVERY_DOCS,
-            });
-            gapiInited = true;
-        }
-
-        // Initialize GIS
-        function gisLoaded() {
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: CLIENT_ID,
-                scope: SCOPES,
-                callback: '',
-            });
-            gisInited = true;
-        }
-
-        // Connect to Google Drive
-        function connectGoogleDrive() {
-            tokenClient.callback = async (resp) => {
-                if (resp.error !== undefined) {
-                    throw (resp);
-                }
-                accessToken = gapi.client.getToken().access_token;
-                updateDriveStatus(true);
-                await getOrCreatePortfolioFolder();
-                await loadDriveImages();
-            };
-
-            if (gapi.client.getToken() === null) {
-                tokenClient.requestAccessToken({prompt: 'consent'});
-            } else {
-                tokenClient.requestAccessToken({prompt: ''});
+        // Convert Google Drive URL to direct image URL
+        function convertGoogleDriveUrl(url) {
+            // Pattern: https://drive.google.com/file/d/FILE_ID/view
+            const driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (driveMatch) {
+                return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
             }
-        }
-
-        // Update Drive status
-        function updateDriveStatus(connected) {
-            const statusIndicator = document.getElementById('driveStatus');
-            const statusText = document.getElementById('driveStatusText');
-            const connectBtn = document.getElementById('connectDriveBtn');
-            const uploadBtn = document.getElementById('uploadDriveBtn');
-            const browseBtn = document.getElementById('browseDriveBtn');
-
-            if (connected) {
-                statusIndicator.classList.add('connected');
-                statusText.textContent = 'เชื่อมต่อ Google Drive แล้ว';
-                connectBtn.style.display = 'none';
-                uploadBtn.style.display = 'inline-block';
-                browseBtn.style.display = 'inline-block';
-            } else {
-                statusIndicator.classList.remove('connected');
-                statusText.textContent = 'ยังไม่ได้เชื่อมต่อ Google Drive';
-                connectBtn.style.display = 'inline-block';
-                uploadBtn.style.display = 'none';
-                browseBtn.style.display = 'none';
-            }
-        }
-
-        // Get or create Portfolio folder
-        async function getOrCreatePortfolioFolder() {
-            try {
-                const response = await gapi.client.drive.files.list({
-                    q: `name='${FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
-                    fields: 'files(id, name)',
-                    spaces: 'drive'
-                });
-
-                if (response.result.files.length > 0) {
-                    portfolioFolderId = response.result.files[0].id;
-                } else {
-                    const folder = await gapi.client.drive.files.create({
-                        resource: {
-                            name: FOLDER_NAME,
-                            mimeType: 'application/vnd.google-apps.folder'
-                        },
-                        fields: 'id'
-                    });
-                    portfolioFolderId = folder.result.id;
-                }
-            } catch (err) {
-                console.error('Error creating folder:', err);
-                alert('ไม่สามารถสร้างโฟลเดอร์ใน Google Drive ได้');
-            }
-        }
-
-        // Upload images to Drive
-        async function uploadToDrive() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.multiple = true;
             
-            input.onchange = async (e) => {
-                const files = e.target.files;
-                if (files.length === 0) return;
+            // Pattern: https://drive.google.com/open?id=FILE_ID
+            const openMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            if (openMatch) {
+                return `https://drive.google.com/uc?export=view&id=${openMatch[1]}`;
+            }
+            
+            return url;
+        }
 
-                showLoading(true);
-                
-                for (let file of files) {
-                    try {
-                        await uploadFileToDrive(file);
-                    } catch (err) {
-                        console.error('Upload error:', err);
-                    }
-                }
-
-                await loadDriveImages();
-                showLoading(false);
-                showSuccess();
+        // Add image from URL
+        function addImageFromUrl() {
+            const input = document.getElementById('imageUrlInput');
+            let url = input.value.trim();
+            
+            if (!url) {
+                alert('กรุณาใส่ URL รูปภาพ');
+                return;
+            }
+            
+            // Convert Google Drive URLs
+            url = convertGoogleDriveUrl(url);
+            
+            const data = loadData();
+            
+            // Check if URL already exists
+            if (data.images.some(img => img.url === url)) {
+                alert('รูปภาพนี้มีอยู่แล้ว');
+                return;
+            }
+            
+            // Add image
+            const imageObj = {
+                id: Date.now().toString(),
+                url: url,
+                name: `Image ${data.images.length + 1}`
             };
             
-            input.click();
-        }
-
-        // Upload single file
-        async function uploadFileToDrive(file) {
-            const metadata = {
-                name: file.name,
-                mimeType: file.type,
-                parents: [portfolioFolderId]
-            };
-
-            const form = new FormData();
-            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-            form.append('file', file);
-
-            const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,thumbnailLink,webContentLink', {
-                method: 'POST',
-                headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
-                body: form,
-            });
-
-            return await response.json();
-        }
-
-        // Load images from Drive
-        async function loadDriveImages() {
-            if (!portfolioFolderId) return;
-
-            try {
-                const response = await gapi.client.drive.files.list({
-                    q: `'${portfolioFolderId}' in parents and trashed=false and mimeType contains 'image/'`,
-                    fields: 'files(id, name, thumbnailLink, webContentLink, webViewLink)',
-                    orderBy: 'createdTime desc'
-                });
-
-                const data = loadData();
-                data.driveImages = response.result.files.map(file => ({
-                    id: file.id,
-                    name: file.name,
-                    thumbnailLink: file.thumbnailLink || file.webContentLink,
-                    webContentLink: `https://drive.google.com/uc?export=view&id=${file.id}`
-                }));
-                
-                saveData(data);
-                renderImagePreview(data.driveImages);
-            } catch (err) {
-                console.error('Error loading images:', err);
-            }
-        }
-
-        // Browse Drive
-        async function browseDrive() {
-            showLoading(true);
-            await loadDriveImages();
-            showLoading(false);
+            data.images.push(imageObj);
+            saveData(data);
+            renderImagePreview(data.images);
+            
+            // Clear input
+            input.value = '';
+            
+            showSuccess();
         }
 
         // Render image preview
@@ -880,44 +847,96 @@
             preview.innerHTML = '';
             
             if (images.length === 0) {
-                preview.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6e6e73; padding: 20px; font-size: 14px;">ยังไม่มีภาพ</p>';
+                preview.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                        <h3>ยังไม่มีภาพ</h3>
+                        <p>เพิ่มรูปภาพโดยวาง URL ด้านบน</p>
+                    </div>
+                `;
                 return;
             }
             
             images.forEach((img, index) => {
                 const item = document.createElement('div');
                 item.className = 'preview-item';
+                item.draggable = true;
+                item.dataset.index = index;
+                
                 item.innerHTML = `
-                    <img src="${img.webContentLink}" alt="${img.name}">
-                    <button class="delete-preview" onclick="deleteImageFromDrive('${img.id}', ${index})">×</button>
+                    <img src="${img.url}" alt="${img.name}" onerror="handleImageError(this)">
+                    <div class="image-error">
+                        ⚠️ ไม่สามารถโหลดรูปได้<br>
+                        <small>ตรวจสอบ URL หรือสิทธิ์การเข้าถึง</small>
+                    </div>
+                    <div class="drag-handle">☰ ลาก</div>
+                    <button class="delete-preview" onclick="deleteImage(${index})">×</button>
                 `;
+                
+                // Drag events
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragend', handleDragEnd);
+                
                 preview.appendChild(item);
             });
         }
 
-        // Delete image from Drive
-        async function deleteImageFromDrive(imageId, index) {
+        // Handle image load error
+        function handleImageError(img) {
+            img.parentElement.classList.add('error');
+        }
+
+        // Delete image
+        function deleteImage(index) {
             if (!confirm('ต้องการลบภาพนี้ใช่หรือไม่?')) return;
-
-            showLoading(true);
             
-            try {
-                await gapi.client.drive.files.delete({
-                    fileId: imageId
-                });
+            const data = loadData();
+            data.images.splice(index, 1);
+            saveData(data);
+            renderImagePreview(data.images);
+            showSuccess();
+        }
 
+        // Drag and drop functionality
+        let draggedIndex = null;
+
+        function handleDragStart(e) {
+            draggedIndex = parseInt(e.target.dataset.index);
+            e.target.style.opacity = '0.5';
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            return false;
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            
+            const dropIndex = parseInt(e.currentTarget.dataset.index);
+            
+            if (draggedIndex !== dropIndex) {
                 const data = loadData();
-                data.driveImages.splice(index, 1);
-                saveData(data);
+                const draggedItem = data.images[draggedIndex];
                 
-                renderImagePreview(data.driveImages);
-                showSuccess();
-            } catch (err) {
-                console.error('Error deleting file:', err);
-                alert('ไม่สามารถลบไฟล์ได้');
+                data.images.splice(draggedIndex, 1);
+                data.images.splice(dropIndex, 0, draggedItem);
+                
+                saveData(data);
+                renderImagePreview(data.images);
             }
             
-            showLoading(false);
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            e.target.style.opacity = '1';
         }
 
         // Save all changes
@@ -960,7 +979,6 @@
                 
                 localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
                 
-                // Clear password fields
                 document.getElementById('newUsername').value = '';
                 document.getElementById('newPassword').value = '';
                 document.getElementById('confirmPassword').value = '';
@@ -975,16 +993,6 @@
             return saved ? JSON.parse(saved) : DEFAULT_CREDENTIALS;
         }
 
-        // Show/hide loading
-        function showLoading(show) {
-            const overlay = document.getElementById('loadingOverlay');
-            if (show) {
-                overlay.classList.add('active');
-            } else {
-                overlay.classList.remove('active');
-            }
-        }
-
         // Show success message
         function showSuccess() {
             const msg = document.getElementById('successMessage');
@@ -994,12 +1002,21 @@
             }, 3000);
         }
 
+        // Handle Enter key in URL input
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlInput = document.getElementById('imageUrlInput');
+            if (urlInput) {
+                urlInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addImageFromUrl();
+                    }
+                });
+            }
+        });
+
         // Initialize
-        window.onload = () => {
-            checkLogin();
-            gapiLoaded();
-            gisLoaded();
-        };
+        window.onload = checkLogin;
     </script>
 </body>
 </html>
