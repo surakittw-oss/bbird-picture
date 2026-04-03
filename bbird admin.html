@@ -84,7 +84,7 @@
             min-height: 100px;
         }
 
-        .login-btn {
+        .login-btn, .add-url-btn, .save-btn {
             width: 100%;
             padding: 14px;
             background: #0071e3;
@@ -97,7 +97,7 @@
             transition: background 0.3s;
         }
 
-        .login-btn:hover {
+        .login-btn:hover, .add-url-btn:hover, .save-btn:hover {
             background: #0077ed;
         }
 
@@ -167,7 +167,6 @@
             font-weight: 600;
         }
 
-        /* Image URL Input Section */
         .url-input-section {
             background: #f5f5f7;
             padding: 24px;
@@ -183,26 +182,12 @@
 
         .url-input-wrapper input {
             flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #d2d2d7;
-            border-radius: 8px;
-            font-size: 14px;
         }
 
         .add-url-btn {
+            width: auto;
             padding: 12px 24px;
-            background: #0071e3;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
             white-space: nowrap;
-        }
-
-        .add-url-btn:hover {
-            background: #0077ed;
         }
 
         .url-help {
@@ -212,47 +197,12 @@
             line-height: 1.5;
         }
 
-        .url-help a {
-            color: #0071e3;
-            text-decoration: none;
-        }
-
-        .url-help a:hover {
-            text-decoration: underline;
-        }
-
-        .url-examples {
-            margin-top: 12px;
-            padding: 12px;
-            background: white;
-            border-radius: 8px;
-            border-left: 3px solid #0071e3;
-        }
-
-        .url-examples strong {
-            display: block;
-            margin-bottom: 8px;
-            color: #1d1d1f;
-            font-size: 13px;
-        }
-
-        .url-examples code {
-            display: block;
-            font-size: 12px;
-            color: #6e6e73;
-            background: #f5f5f7;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin: 4px 0;
-            word-break: break-all;
-        }
-
-        /* Image Preview Gallery */
         .image-preview {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 16px;
             margin-top: 16px;
+            min-height: 100px;
         }
 
         .preview-item {
@@ -275,26 +225,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .preview-item .image-error {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #ff3b30;
-            font-size: 12px;
-            padding: 12px;
-        }
-
-        .preview-item.error img {
-            display: none;
-        }
-
-        .preview-item.error .image-error {
-            display: block;
         }
 
         .delete-preview {
@@ -321,43 +251,11 @@
             opacity: 1;
         }
 
-        .delete-preview:hover {
-            background: rgba(255, 69, 58, 1);
-        }
-
-        .drag-handle {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #1d1d1f;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            cursor: move;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .preview-item:hover .drag-handle {
-            opacity: 1;
-        }
-
-        .save-btn {
-            width: 100%;
-            padding: 16px;
-            background: #0071e3;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .save-btn:hover {
-            background: #0077ed;
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: #6e6e73;
         }
 
         .logo-preview {
@@ -390,10 +288,6 @@
             font-size: 12px;
         }
 
-        .logo-preview .remove-logo:hover {
-            background: #ff453a;
-        }
-
         .success-message {
             position: fixed;
             top: 24px;
@@ -405,12 +299,10 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: none;
             z-index: 5000;
-            align-items: center;
-            gap: 8px;
         }
 
         .success-message.show {
-            display: flex;
+            display: block;
             animation: slideIn 0.3s ease;
         }
 
@@ -425,61 +317,21 @@
             }
         }
 
-        /* SVG Icon Styles */
-        h1 svg {
-            color: #0071e3;
+        .debug-info {
+            margin-top: 16px;
+            padding: 12px;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: monospace;
         }
 
-        .save-btn svg {
-            vertical-align: middle;
-        }
-
-        .success-message svg {
-            vertical-align: middle;
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6e6e73;
-        }
-
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        .empty-state h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
-            color: #1d1d1f;
-        }
-
-        .empty-state p {
-            font-size: 14px;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .login-box {
-                padding: 32px 24px;
-            }
-
-            .admin-section {
-                padding: 24px;
-            }
-
-            .admin-header h1 {
-                font-size: 28px;
-            }
-
             .url-input-wrapper {
                 flex-direction: column;
             }
-
+            
             .image-preview {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
@@ -491,21 +343,21 @@
     <div class="login-container" id="loginScreen">
         <div class="login-box">
             <h1>
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px; color: #0071e3;">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                 </svg>
                 Admin Login
             </h1>
             <p>เข้าสู่ระบบจัดการเว็บไซต์</p>
-            <form onsubmit="handleLogin(event)">
+            <form onsubmit="return handleLogin(event)">
                 <div class="form-group">
                     <label for="username">ชื่อผู้ใช้</label>
-                    <input type="text" id="username" placeholder="admin" required autocomplete="username">
+                    <input type="text" id="username" placeholder="admin" required>
                 </div>
                 <div class="form-group">
                     <label for="password">รหัสผ่าน</label>
-                    <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+                    <input type="password" id="password" placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="login-btn">เข้าสู่ระบบ</button>
                 <div class="error-message" id="errorMessage">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</div>
@@ -517,7 +369,7 @@
     <div class="admin-container" id="adminPanel">
         <div class="admin-header">
             <h1>
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px; color: #0071e3;">
                     <rect x="3" y="3" width="7" height="7"></rect>
                     <rect x="14" y="3" width="7" height="7"></rect>
                     <rect x="14" y="14" width="7" height="7"></rect>
@@ -533,7 +385,7 @@
             <h2>ตั้งค่าทั่วไป</h2>
             <div class="form-group">
                 <label for="logoTypeSelect">ประเภทโลโก้</label>
-                <select id="logoTypeSelect" onchange="toggleLogoInput()" style="width: 100%; padding: 12px 16px; border: 1px solid #d2d2d7; border-radius: 8px; font-size: 16px; font-family: inherit;">
+                <select id="logoTypeSelect" onchange="toggleLogoInput()" style="width: 100%; padding: 12px 16px; border: 1px solid #d2d2d7; border-radius: 8px; font-size: 16px;">
                     <option value="text">ข้อความ</option>
                     <option value="image">รูปภาพ</option>
                 </select>
@@ -546,8 +398,7 @@
             
             <div class="form-group" id="logoImageGroup" style="display: none;">
                 <label for="logoImageInput">อัพโหลดโลโก้</label>
-                <input type="file" id="logoImageInput" accept="image/*" onchange="handleLogoUpload(event)" style="display: block; padding: 8px 0;">
-                <small style="color: #6e6e73; margin-top: 8px; display: block;">แนะนำ: PNG พื้นหลังโปร่งใส, สูงไม่เกิน 80px</small>
+                <input type="file" id="logoImageInput" accept="image/*" onchange="handleLogoUpload(event)">
                 <div id="logoPreview"></div>
             </div>
             
@@ -571,45 +422,29 @@
             
             <div class="url-input-section">
                 <div class="url-input-wrapper">
-                    <input type="url" id="imageUrlInput" placeholder="วาง URL รูปภาพที่นี่... (Google Drive, Photos, หรือ URL ใดก็ได้)" />
-                    <button class="add-url-btn" onclick="addImageFromUrl()">เพิ่มรูป</button>
+                    <input type="text" id="imageUrlInput" placeholder="วาง URL รูปภาพที่นี่..." />
+                    <button type="button" class="add-url-btn" id="addImageBtn">เพิ่มรูป</button>
                 </div>
                 
                 <div class="url-help">
-                    💡 <strong>วิธีใช้:</strong> คัดลอก URL รูปภาพจาก Google Drive, Google Photos, Imgur, หรือที่ไหนก็ได้ แล้ววางที่นี่
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px; color: #f59e0b;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                    </svg>
+                    <strong>วิธีใช้:</strong> คัดลอก URL รูปภาพจาก Google Drive, Imgur, หรือที่ไหนก็ได้ แล้ววางที่นี่<br>
+                    <strong>Google Drive:</strong> Share → Anyone with the link → Copy link<br>
+                    <strong>Imgur:</strong> คลิกขวาที่รูป → Copy image address
                 </div>
 
-                <div class="url-examples">
-                    <strong>📋 ตัวอย่าง URL ที่ใช้ได้:</strong>
-                    <code>https://drive.google.com/file/d/xxx/view?usp=sharing</code>
-                    <code>https://lh3.googleusercontent.com/xxx</code>
-                    <code>https://i.imgur.com/xxx.jpg</code>
-                    <code>https://example.com/image.jpg</code>
-                    
-                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e5e7;">
-                        <strong>🔗 วิธีดึง URL จาก Google Drive (สำคัญ!):</strong><br>
-                        1. เปิดรูปใน Google Drive<br>
-                        2. คลิกขวา → <strong>Share</strong> (หรือไอคอนแชร์)<br>
-                        3. เปลี่ยนเป็น <strong>"Anyone with the link"</strong> ← สำคัญมาก!<br>
-                        4. คลิก <strong>Copy link</strong><br>
-                        5. วางที่นี่แล้วกด "เพิ่มรูป"<br><br>
-                        
-                        <strong style="color: #ff3b30;">⚠️ ถ้าไม่แชร์เป็น "Anyone with the link" รูปจะไม่แสดง!</strong>
-                    </div>
-                </div>
+                <div id="debugInfo" class="debug-info" style="display: none;"></div>
             </div>
 
             <div class="form-group">
-                <label>ภาพของคุณ (ลากเพื่อเรียงลำดับ)</label>
+                <label>ภาพของคุณ (<span id="imageCount">0</span> รูป)</label>
                 <div class="image-preview" id="imagePreview">
                     <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                            <polyline points="21 15 16 10 5 21"></polyline>
-                        </svg>
-                        <h3>ยังไม่มีภาพ</h3>
-                        <p>เพิ่มรูปภาพโดยวาง URL ด้านบน</p>
+                        <p>ยังไม่มีภาพ - เพิ่มรูปภาพโดยวาง URL ด้านบน</p>
                     </div>
                 </div>
             </div>
@@ -644,25 +479,38 @@
 
     <!-- Success Message -->
     <div class="success-message" id="successMessage">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
             <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
-        บันทึกสำเร็จ!
+        <span>บันทึกสำเร็จ!</span>
     </div>
 
     <script>
-        // Default admin credentials
-        const DEFAULT_CREDENTIALS = {
-            username: 'admin',
-            password: 'admin123'
-        };
+        // Debug mode
+        const DEBUG = true;
+        
+        function log(...args) {
+            if (DEBUG) {
+                console.log('[Portfolio Admin]', ...args);
+                const debugInfo = document.getElementById('debugInfo');
+                if (debugInfo) {
+                    debugInfo.style.display = 'block';
+                    debugInfo.innerHTML += args.join(' ') + '<br>';
+                }
+            }
+        }
 
         // Storage keys
         const STORAGE_KEY = 'portfolioData';
         const AUTH_KEY = 'adminAuth';
         const SESSION_KEY = 'adminSession';
+        
+        const DEFAULT_CREDENTIALS = {
+            username: 'admin',
+            password: 'admin123'
+        };
 
-        // Check login status
+        // Check login
         function checkLogin() {
             const session = sessionStorage.getItem(SESSION_KEY);
             if (session === 'true') {
@@ -689,6 +537,8 @@
                     document.getElementById('errorMessage').classList.remove('show');
                 }, 3000);
             }
+            
+            return false;
         }
 
         // Show admin panel
@@ -696,12 +546,63 @@
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminPanel').classList.add('active');
             loadAdminData();
+            setupEventListeners();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            log('Setting up event listeners');
+            
+            // Add image button
+            const addBtn = document.getElementById('addImageBtn');
+            if (addBtn) {
+                addBtn.addEventListener('click', function(e) {
+                    log('Add button clicked');
+                    e.preventDefault();
+                    addImageFromUrl();
+                });
+            }
+            
+            // Enter key on URL input
+            const urlInput = document.getElementById('imageUrlInput');
+            if (urlInput) {
+                urlInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addImageFromUrl();
+                    }
+                });
+            }
+            
+            log('Event listeners setup complete');
         }
 
         // Logout
         function logout() {
             sessionStorage.removeItem(SESSION_KEY);
             location.reload();
+        }
+
+        // Load data
+        function loadData() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            const data = stored ? JSON.parse(stored) : {
+                logoType: 'text',
+                logo: 'MY PORTFOLIO',
+                logoImage: null,
+                title: 'Capturing Moments',
+                description: 'Photography is the art of frozen time, the ability to store emotion and feelings within a frame.',
+                footer: 'My Photography Portfolio',
+                images: []
+            };
+            log('Data loaded:', data);
+            return data;
+        }
+
+        // Save data
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            log('Data saved:', data);
         }
 
         // Load admin data
@@ -728,25 +629,6 @@
             renderImagePreview(data.images || []);
         }
 
-        // Load data from localStorage
-        function loadData() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            return stored ? JSON.parse(stored) : {
-                logoType: 'text',
-                logo: 'MY PORTFOLIO',
-                logoImage: null,
-                title: 'Capturing Moments',
-                description: 'Photography is the art of frozen time, the ability to store emotion and feelings within a frame.',
-                footer: 'My Photography Portfolio',
-                images: []
-            };
-        }
-
-        // Save data to localStorage
-        function saveData(data) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        }
-
         // Toggle logo input
         function toggleLogoInput() {
             const logoType = document.getElementById('logoTypeSelect').value;
@@ -769,8 +651,7 @@
             
             const reader = new FileReader();
             reader.onload = (e) => {
-                const logoPreview = document.getElementById('logoPreview');
-                logoPreview.innerHTML = `
+                document.getElementById('logoPreview').innerHTML = `
                     <div class="logo-preview">
                         <img src="${e.target.result}" alt="Logo preview">
                         <span style="color: #6e6e73; font-size: 14px;">${file.name}</span>
@@ -789,126 +670,117 @@
             window.tempLogoImage = null;
         }
 
-        // Convert Google Drive URL to direct image URL
+        // Convert Google Drive URL
         function convertGoogleDriveUrl(url) {
-            // Remove any query parameters first to get clean URL
             const cleanUrl = url.split('?')[0];
-            
-            // Pattern 1: https://drive.google.com/file/d/FILE_ID/view
             let driveMatch = cleanUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+            
             if (!driveMatch) {
-                // Pattern 2: https://drive.google.com/open?id=FILE_ID
                 driveMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
             }
             
             if (driveMatch) {
                 const fileId = driveMatch[1];
-                // Use Google Drive thumbnail endpoint which works better for images
                 return `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`;
             }
             
-            // If it's already a direct image URL or other service, return as-is
             return url;
         }
 
         // Add image from URL
         function addImageFromUrl() {
-            const input = document.getElementById('imageUrlInput');
-            let url = input.value.trim();
+            log('=== ADD IMAGE FUNCTION CALLED ===');
             
-            if (!url) {
-                alert('กรุณาใส่ URL รูปภาพ');
-                return;
-            }
-            
-            // Check if it's a Google Drive URL
-            const isGoogleDrive = url.includes('drive.google.com');
-            
-            // Convert Google Drive URLs
-            const originalUrl = url;
-            url = convertGoogleDriveUrl(url);
-            
-            const data = loadData();
-            
-            // Check if URL already exists
-            if (data.images.some(img => img.url === url || img.originalUrl === originalUrl)) {
-                alert('รูปภาพนี้มีอยู่แล้ว');
-                return;
-            }
-            
-            // Add image
-            const imageObj = {
-                id: Date.now().toString(),
-                url: url,
-                originalUrl: originalUrl,
-                name: `Image ${data.images.length + 1}`,
-                isGoogleDrive: isGoogleDrive
-            };
-            
-            data.images.push(imageObj);
-            saveData(data);
-            renderImagePreview(data.images);
-            
-            // Clear input
-            input.value = '';
-            
-            // Show success with helpful message
-            if (isGoogleDrive) {
-                showSuccessWithMessage('เพิ่มรูปจาก Google Drive แล้ว! ถ้ารูปไม่แสดง ตรวจสอบว่าได้แชร์เป็น "Anyone with the link" แล้ว');
-            } else {
-                showSuccess();
+            try {
+                const input = document.getElementById('imageUrlInput');
+                let url = input.value.trim();
+                
+                log('Input URL:', url);
+                
+                if (!url) {
+                    alert('กรุณาใส่ URL รูปภาพ');
+                    return;
+                }
+                
+                const isGoogleDrive = url.includes('drive.google.com');
+                const originalUrl = url;
+                url = convertGoogleDriveUrl(url);
+                
+                log('Converted URL:', url);
+                log('Is Google Drive:', isGoogleDrive);
+                
+                const data = loadData();
+                
+                if (!data.images) {
+                    data.images = [];
+                }
+                
+                log('Current images count:', data.images.length);
+                
+                if (data.images.some(img => img.url === url)) {
+                    alert('รูปภาพนี้มีอยู่แล้ว');
+                    return;
+                }
+                
+                const imageObj = {
+                    id: Date.now().toString(),
+                    url: url,
+                    originalUrl: originalUrl,
+                    name: `Image ${data.images.length + 1}`,
+                    isGoogleDrive: isGoogleDrive
+                };
+                
+                log('Adding image:', imageObj);
+                
+                data.images.push(imageObj);
+                saveData(data);
+                
+                log('Rendering preview with', data.images.length, 'images');
+                renderImagePreview(data.images);
+                
+                input.value = '';
+                
+                showSuccess(isGoogleDrive ? 
+                    'เพิ่มรูปแล้ว! (Google Drive: ตรวจสอบการแชร์)' : 
+                    'เพิ่มรูปสำเร็จ!');
+                
+                log('=== ADD IMAGE COMPLETE ===');
+                
+            } catch (error) {
+                log('ERROR:', error);
+                alert('เกิดข้อผิดพลาด: ' + error.message);
             }
         }
 
         // Render image preview
         function renderImagePreview(images) {
+            log('Rendering preview for', images.length, 'images');
+            
             const preview = document.getElementById('imagePreview');
+            const countEl = document.getElementById('imageCount');
+            
+            if (countEl) {
+                countEl.textContent = images.length;
+            }
+            
             preview.innerHTML = '';
             
             if (images.length === 0) {
-                preview.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                            <polyline points="21 15 16 10 5 21"></polyline>
-                        </svg>
-                        <h3>ยังไม่มีภาพ</h3>
-                        <p>เพิ่มรูปภาพโดยวาง URL ด้านบน</p>
-                    </div>
-                `;
+                preview.innerHTML = '<div class="empty-state"><p>ยังไม่มีภาพ - เพิ่มรูปภาพโดยวาง URL ด้านบน</p></div>';
                 return;
             }
             
             images.forEach((img, index) => {
                 const item = document.createElement('div');
                 item.className = 'preview-item';
-                item.draggable = true;
-                item.dataset.index = index;
-                
                 item.innerHTML = `
-                    <img src="${img.url}" alt="${img.name}" onerror="handleImageError(this)">
-                    <div class="image-error">
-                        ⚠️ ไม่สามารถโหลดรูปได้<br>
-                        <small>ตรวจสอบ URL หรือสิทธิ์การเข้าถึง</small>
-                    </div>
-                    <div class="drag-handle">☰ ลาก</div>
+                    <img src="${img.url}" alt="${img.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'150\'%3E%3Crect fill=\'%23f5f5f7\' width=\'200\' height=\'150\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' fill=\'%23999\' font-family=\'Arial\' font-size=\'14\'%3EError%3C/text%3E%3C/svg%3E'">
                     <button class="delete-preview" onclick="deleteImage(${index})">×</button>
                 `;
-                
-                // Drag events
-                item.addEventListener('dragstart', handleDragStart);
-                item.addEventListener('dragover', handleDragOver);
-                item.addEventListener('drop', handleDrop);
-                item.addEventListener('dragend', handleDragEnd);
-                
                 preview.appendChild(item);
             });
-        }
-
-        // Handle image load error
-        function handleImageError(img) {
-            img.parentElement.classList.add('error');
+            
+            log('Preview rendered');
         }
 
         // Delete image
@@ -919,50 +791,13 @@
             data.images.splice(index, 1);
             saveData(data);
             renderImagePreview(data.images);
-            showSuccess();
-        }
-
-        // Drag and drop functionality
-        let draggedIndex = null;
-
-        function handleDragStart(e) {
-            draggedIndex = parseInt(e.target.dataset.index);
-            e.target.style.opacity = '0.5';
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            return false;
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            
-            const dropIndex = parseInt(e.currentTarget.dataset.index);
-            
-            if (draggedIndex !== dropIndex) {
-                const data = loadData();
-                const draggedItem = data.images[draggedIndex];
-                
-                data.images.splice(draggedIndex, 1);
-                data.images.splice(dropIndex, 0, draggedItem);
-                
-                saveData(data);
-                renderImagePreview(data.images);
-            }
-            
-            return false;
-        }
-
-        function handleDragEnd(e) {
-            e.target.style.opacity = '1';
+            showSuccess('ลบรูปแล้ว');
         }
 
         // Save all changes
         function saveAllChanges() {
             const data = loadData();
             
-            // Save general settings
             data.logoType = document.getElementById('logoTypeSelect').value;
             
             if (data.logoType === 'text') {
@@ -991,9 +826,12 @@
                     return;
                 }
                 
+                const savedAuth = localStorage.getItem(AUTH_KEY);
+                const currentAuth = savedAuth ? JSON.parse(savedAuth) : DEFAULT_CREDENTIALS;
+                
                 const auth = {
-                    username: newUsername || loadAuth().username,
-                    password: newPassword || loadAuth().password
+                    username: newUsername || currentAuth.username,
+                    password: newPassword || currentAuth.password
                 };
                 
                 localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
@@ -1003,59 +841,24 @@
                 document.getElementById('confirmPassword').value = '';
             }
             
-            showSuccess();
+            showSuccess('บันทึกทั้งหมดเรียบร้อย!');
         }
 
-        // Load auth
-        function loadAuth() {
-            const saved = localStorage.getItem(AUTH_KEY);
-            return saved ? JSON.parse(saved) : DEFAULT_CREDENTIALS;
-        }
-
-        // Show success message
-        function showSuccess() {
+        // Show success
+        function showSuccess(message) {
             const msg = document.getElementById('successMessage');
-            msg.innerHTML = `
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                บันทึกสำเร็จ!
-            `;
+            const span = msg.querySelector('span') || document.createElement('span');
+            span.textContent = message || 'บันทึกสำเร็จ!';
+            
+            if (!msg.querySelector('span')) {
+                msg.appendChild(span);
+            }
+            
             msg.classList.add('show');
             setTimeout(() => {
                 msg.classList.remove('show');
             }, 3000);
         }
-
-        // Show success with custom message
-        function showSuccessWithMessage(message) {
-            const msg = document.getElementById('successMessage');
-            msg.innerHTML = `
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                ${message}
-            `;
-            msg.style.maxWidth = '400px';
-            msg.classList.add('show');
-            setTimeout(() => {
-                msg.classList.remove('show');
-                msg.style.maxWidth = '';
-            }, 5000);
-        }
-
-        // Handle Enter key in URL input
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlInput = document.getElementById('imageUrlInput');
-            if (urlInput) {
-                urlInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addImageFromUrl();
-                    }
-                });
-            }
-        });
 
         // Initialize
         window.onload = checkLogin;
