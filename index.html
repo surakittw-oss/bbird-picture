@@ -105,14 +105,14 @@
         }
 
         .gallery-grid {
-            column-count: 3;
-            column-gap: 24px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            grid-auto-flow: row dense;
         }
 
         .gallery-item {
             position: relative;
-            break-inside: avoid;
-            margin-bottom: 24px;
             overflow: hidden;
             border-radius: 12px;
             cursor: pointer;
@@ -128,6 +128,8 @@
         .gallery-item img {
             width: 100%;
             height: auto;
+            display: block;
+        }
             display: block;
             object-fit: cover;
         }
@@ -194,7 +196,7 @@
             }
 
             .gallery-grid {
-                column-count: 1;
+                grid-template-columns: 1fr;
             }
 
             .nav-links a {
@@ -204,7 +206,13 @@
 
         @media (min-width: 769px) and (max-width: 1024px) {
             .gallery-grid {
-                column-count: 2;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
     </style>
