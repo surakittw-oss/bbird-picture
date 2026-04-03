@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Portfolio Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 48px;
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-box h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .login-box p {
+            color: #6e6e73;
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0071e3;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #0077ed;
+        }
+
+        .error-message {
+            color: #ff3b30;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Admin Panel */
+        .admin-container {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .admin-container.active {
+            display: block;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+        .admin-header h1 {
+            font-size: 36px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #ff453a;
+        }
+
+        .admin-section {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .admin-section h2 {
+            font-size: 24px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .google-drive-section {
+            background: #f5f5f7;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .drive-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #86868b;
+        }
+
+        .status-indicator.connected {
+            background: #34c759;
+        }
+
+        .drive-btn {
+            padding: 12px 24px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin-right: 12px;
+        }
+
+        .drive-btn:hover {
+            background: #0077ed;
+        }
+
+        .drive-btn.secondary {
+            background: white;
+            color: #0071e3;
+            border: 1px solid #0071e3;
+        }
+
+        .drive-btn.secondary:hover {
+            background: #f5f5f7;
+        }
+
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .preview-item {
+            position: relative;
+            aspect-ratio: 4/3;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f5f5f7;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .delete-preview {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 16px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #0077ed;
+        }
+
+        .logo-preview {
+            margin-top: 12px;
+            padding: 16px;
+            background: #f5f5f7;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-preview img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            background: white;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .logo-preview .remove-logo {
+            margin-left: auto;
+            padding: 6px 12px;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .logo-preview .remove-logo:hover {
+            background: #ff453a;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 4000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #d2d2d7;
+            border-top-color: #0071e3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: #34c759;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 5000;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 32px 24px;
+            }
+
+            .admin-section {
+                padding: 24px;
+            }
+
+            .admin-header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <h1>🔒 Admin Login</h1>
+            <p>เข้าสู่ระบบจัดการเว็บไซต์</p>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">ชื่อผู้ใช้</label>
+                    <input type="text" id="username" placeholder="admin" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">รหัสผ่าน</label>
+                    <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="login-btn">เข้าสู่ระบบ</button>
+                <div class="error-message" id="errorMessage">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-container" id="adminPanel">
+        <div class="admin-header">
+            <h1>📊 Admin Dashboard</h1>
+            <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
+        </div>
+
+        <!-- General Settings -->
+        <div class="admin-section">
+            <h2>ตั้งค่าทั่วไป</h2>
+            <div class="form-group">
+                <label for="logoTypeSelect">ประเภทโลโก้</label>
+                <select id="logoTypeSelect" onchange="toggleLogoInput()" style="width: 100%; padding: 12px 16px; border: 1px solid #d2d2d7; border-radius: 8px; font-size: 16px; font-family: inherit;">
+                    <option value="text">ข้อความ</option>
+                    <option value="image">รูปภาพ</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="logoTextGroup">
+                <label for="logoInput">ชื่อโลโก้</label>
+                <input type="text" id="logoInput" placeholder="MY PORTFOLIO">
+            </div>
+            
+            <div class="form-group" id="logoImageGroup" style="display: none;">
+                <label for="logoImageInput">อัพโหลดโลโก้</label>
+                <input type="file" id="logoImageInput" accept="image/*" onchange="handleLogoUpload(event)" style="display: block; padding: 8px 0;">
+                <small style="color: #6e6e73; margin-top: 8px; display: block;">แนะนำ: PNG พื้นหลังโปร่งใส, สูงไม่เกิน 80px</small>
+                <div id="logoPreview"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="titleInput">หัวข้อหลัก</label>
+                <input type="text" id="titleInput" placeholder="Capturing Moments">
+            </div>
+            <div class="form-group">
+                <label for="descInput">คำอธิบาย</label>
+                <textarea id="descInput" placeholder="Photography is the art..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="footerInput">ข้อความ Footer</label>
+                <input type="text" id="footerInput" placeholder="My Photography Portfolio">
+            </div>
+        </div>
+
+        <!-- Google Drive Integration -->
+        <div class="admin-section">
+            <h2>จัดการภาพถ่าย (Google Drive)</h2>
+            <div class="google-drive-section">
+                <div class="drive-status">
+                    <div class="status-indicator" id="driveStatus"></div>
+                    <span id="driveStatusText">ยังไม่ได้เชื่อมต่อ Google Drive</span>
+                </div>
+                <button class="drive-btn" id="connectDriveBtn" onclick="connectGoogleDrive()">เชื่อมต่อ Google Drive</button>
+                <button class="drive-btn secondary" id="uploadDriveBtn" onclick="uploadToDrive()" style="display: none;">อัพโหลดภาพ</button>
+                <button class="drive-btn secondary" id="browseDriveBtn" onclick="browseDrive()" style="display: none;">รีเฟรช</button>
+            </div>
+            
+            <div class="form-group">
+                <label>ภาพในโฟลเดอร์ Portfolio (ลากเพื่อเรียงลำดับ)</label>
+                <div class="image-preview" id="imagePreview">
+                    <!-- Preview images will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="admin-section">
+            <h2>ตั้งค่าความปลอดภัย</h2>
+            <div class="form-group">
+                <label for="newUsername">เปลี่ยนชื่อผู้ใช้</label>
+                <input type="text" id="newUsername" placeholder="ชื่อผู้ใช้ใหม่">
+            </div>
+            <div class="form-group">
+                <label for="newPassword">เปลี่ยนรหัสผ่าน</label>
+                <input type="password" id="newPassword" placeholder="รหัสผ่านใหม่">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">ยืนยันรหัสผ่าน</label>
+                <input type="password" id="confirmPassword" placeholder="ยืนยันรหัสผ่านใหม่">
+            </div>
+        </div>
+
+        <button class="save-btn" onclick="saveAllChanges()">💾 บันทึกการเปลี่ยนแปลงทั้งหมด</button>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        ✅ บันทึกสำเร็จ!
+    </div>
+
+    <!-- Google API -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+
+    <script>
+        // Default admin credentials (เปลี่ยนได้ในหน้า Admin)
+        const DEFAULT_CREDENTIALS = {
+            username: 'admin',
+            password: 'admin123'
+        };
+
+        // Google Drive Configuration
+        const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
+        const API_KEY = 'YOUR_GOOGLE_API_KEY';
+        const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+
+        // Storage keys
+        const STORAGE_KEY = 'portfolioData';
+        const AUTH_KEY = 'adminAuth';
+        const SESSION_KEY = 'adminSession';
+        const FOLDER_NAME = 'Portfolio_Photos';
+
+        let tokenClient;
+        let gapiInited = false;
+        let gisInited = false;
+        let accessToken = null;
+        let portfolioFolderId = null;
+
+        // Check login status
+        function checkLogin() {
+            const session = sessionStorage.getItem(SESSION_KEY);
+            if (session === 'true') {
+                showAdminPanel();
+            }
+        }
+
+        // Handle login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Load saved credentials or use default
+            const savedAuth = localStorage.getItem(AUTH_KEY);
+            const credentials = savedAuth ? JSON.parse(savedAuth) : DEFAULT_CREDENTIALS;
+            
+            if (username === credentials.username && password === credentials.password) {
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                showAdminPanel();
+            } else {
+                document.getElementById('errorMessage').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('errorMessage').classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Show admin panel
+        function showAdminPanel() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminPanel').classList.add('active');
+            loadAdminData();
+        }
+
+        // Logout
+        function logout() {
+            sessionStorage.removeItem(SESSION_KEY);
+            location.reload();
+        }
+
+        // Load admin data
+        function loadAdminData() {
+            const data = loadData();
+            
+            document.getElementById('logoTypeSelect').value = data.logoType || 'text';
+            document.getElementById('logoInput').value = data.logo;
+            document.getElementById('titleInput').value = data.title;
+            document.getElementById('descInput').value = data.description;
+            document.getElementById('footerInput').value = data.footer;
+            
+            toggleLogoInput();
+            
+            if (data.logoType === 'image' && data.logoImage) {
+                document.getElementById('logoPreview').innerHTML = `
+                    <div class="logo-preview">
+                        <img src="${data.logoImage}" alt="Logo preview">
+                        <button class="remove-logo" onclick="removeLogo()">ลบ</button>
+                    </div>
+                `;
+            }
+            
+            if (data.driveImages && data.driveImages.length > 0) {
+                renderImagePreview(data.driveImages);
+            }
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : {
+                logoType: 'text',
+                logo: 'MY PORTFOLIO',
+                logoImage: null,
+                title: 'Capturing Moments',
+                description: 'Photography is the art of frozen time, the ability to store emotion and feelings within a frame.',
+                footer: 'My Photography Portfolio',
+                driveImages: []
+            };
+        }
+
+        // Save data to localStorage
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        // Toggle logo input
+        function toggleLogoInput() {
+            const logoType = document.getElementById('logoTypeSelect').value;
+            const textGroup = document.getElementById('logoTextGroup');
+            const imageGroup = document.getElementById('logoImageGroup');
+            
+            if (logoType === 'text') {
+                textGroup.style.display = 'block';
+                imageGroup.style.display = 'none';
+            } else {
+                textGroup.style.display = 'none';
+                imageGroup.style.display = 'block';
+            }
+        }
+
+        // Handle logo upload
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const logoPreview = document.getElementById('logoPreview');
+                logoPreview.innerHTML = `
+                    <div class="logo-preview">
+                        <img src="${e.target.result}" alt="Logo preview">
+                        <span style="color: #6e6e73; font-size: 14px;">${file.name}</span>
+                        <button class="remove-logo" onclick="removeLogo()">ลบ</button>
+                    </div>
+                `;
+                window.tempLogoImage = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Remove logo
+        function removeLogo() {
+            document.getElementById('logoPreview').innerHTML = '';
+            document.getElementById('logoImageInput').value = '';
+            window.tempLogoImage = null;
+        }
+
+        // Initialize GAPI
+        function gapiLoaded() {
+            gapi.load('client', initializeGapiClient);
+        }
+
+        async function initializeGapiClient() {
+            await gapi.client.init({
+                apiKey: API_KEY,
+                discoveryDocs: DISCOVERY_DOCS,
+            });
+            gapiInited = true;
+        }
+
+        // Initialize GIS
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: '',
+            });
+            gisInited = true;
+        }
+
+        // Connect to Google Drive
+        function connectGoogleDrive() {
+            tokenClient.callback = async (resp) => {
+                if (resp.error !== undefined) {
+                    throw (resp);
+                }
+                accessToken = gapi.client.getToken().access_token;
+                updateDriveStatus(true);
+                await getOrCreatePortfolioFolder();
+                await loadDriveImages();
+            };
+
+            if (gapi.client.getToken() === null) {
+                tokenClient.requestAccessToken({prompt: 'consent'});
+            } else {
+                tokenClient.requestAccessToken({prompt: ''});
+            }
+        }
+
+        // Update Drive status
+        function updateDriveStatus(connected) {
+            const statusIndicator = document.getElementById('driveStatus');
+            const statusText = document.getElementById('driveStatusText');
+            const connectBtn = document.getElementById('connectDriveBtn');
+            const uploadBtn = document.getElementById('uploadDriveBtn');
+            const browseBtn = document.getElementById('browseDriveBtn');
+
+            if (connected) {
+                statusIndicator.classList.add('connected');
+                statusText.textContent = 'เชื่อมต่อ Google Drive แล้ว';
+                connectBtn.style.display = 'none';
+                uploadBtn.style.display = 'inline-block';
+                browseBtn.style.display = 'inline-block';
+            } else {
+                statusIndicator.classList.remove('connected');
+                statusText.textContent = 'ยังไม่ได้เชื่อมต่อ Google Drive';
+                connectBtn.style.display = 'inline-block';
+                uploadBtn.style.display = 'none';
+                browseBtn.style.display = 'none';
+            }
+        }
+
+        // Get or create Portfolio folder
+        async function getOrCreatePortfolioFolder() {
+            try {
+                const response = await gapi.client.drive.files.list({
+                    q: `name='${FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+                    fields: 'files(id, name)',
+                    spaces: 'drive'
+                });
+
+                if (response.result.files.length > 0) {
+                    portfolioFolderId = response.result.files[0].id;
+                } else {
+                    const folder = await gapi.client.drive.files.create({
+                        resource: {
+                            name: FOLDER_NAME,
+                            mimeType: 'application/vnd.google-apps.folder'
+                        },
+                        fields: 'id'
+                    });
+                    portfolioFolderId = folder.result.id;
+                }
+            } catch (err) {
+                console.error('Error creating folder:', err);
+                alert('ไม่สามารถสร้างโฟลเดอร์ใน Google Drive ได้');
+            }
+        }
+
+        // Upload images to Drive
+        async function uploadToDrive() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.multiple = true;
+            
+            input.onchange = async (e) => {
+                const files = e.target.files;
+                if (files.length === 0) return;
+
+                showLoading(true);
+                
+                for (let file of files) {
+                    try {
+                        await uploadFileToDrive(file);
+                    } catch (err) {
+                        console.error('Upload error:', err);
+                    }
+                }
+
+                await loadDriveImages();
+                showLoading(false);
+                showSuccess();
+            };
+            
+            input.click();
+        }
+
+        // Upload single file
+        async function uploadFileToDrive(file) {
+            const metadata = {
+                name: file.name,
+                mimeType: file.type,
+                parents: [portfolioFolderId]
+            };
+
+            const form = new FormData();
+            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+            form.append('file', file);
+
+            const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,thumbnailLink,webContentLink', {
+                method: 'POST',
+                headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
+                body: form,
+            });
+
+            return await response.json();
+        }
+
+        // Load images from Drive
+        async function loadDriveImages() {
+            if (!portfolioFolderId) return;
+
+            try {
+                const response = await gapi.client.drive.files.list({
+                    q: `'${portfolioFolderId}' in parents and trashed=false and mimeType contains 'image/'`,
+                    fields: 'files(id, name, thumbnailLink, webContentLink, webViewLink)',
+                    orderBy: 'createdTime desc'
+                });
+
+                const data = loadData();
+                data.driveImages = response.result.files.map(file => ({
+                    id: file.id,
+                    name: file.name,
+                    thumbnailLink: file.thumbnailLink || file.webContentLink,
+                    webContentLink: `https://drive.google.com/uc?export=view&id=${file.id}`
+                }));
+                
+                saveData(data);
+                renderImagePreview(data.driveImages);
+            } catch (err) {
+                console.error('Error loading images:', err);
+            }
+        }
+
+        // Browse Drive
+        async function browseDrive() {
+            showLoading(true);
+            await loadDriveImages();
+            showLoading(false);
+        }
+
+        // Render image preview
+        function renderImagePreview(images) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+            
+            if (images.length === 0) {
+                preview.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6e6e73; padding: 20px; font-size: 14px;">ยังไม่มีภาพ</p>';
+                return;
+            }
+            
+            images.forEach((img, index) => {
+                const item = document.createElement('div');
+                item.className = 'preview-item';
+                item.innerHTML = `
+                    <img src="${img.webContentLink}" alt="${img.name}">
+                    <button class="delete-preview" onclick="deleteImageFromDrive('${img.id}', ${index})">×</button>
+                `;
+                preview.appendChild(item);
+            });
+        }
+
+        // Delete image from Drive
+        async function deleteImageFromDrive(imageId, index) {
+            if (!confirm('ต้องการลบภาพนี้ใช่หรือไม่?')) return;
+
+            showLoading(true);
+            
+            try {
+                await gapi.client.drive.files.delete({
+                    fileId: imageId
+                });
+
+                const data = loadData();
+                data.driveImages.splice(index, 1);
+                saveData(data);
+                
+                renderImagePreview(data.driveImages);
+                showSuccess();
+            } catch (err) {
+                console.error('Error deleting file:', err);
+                alert('ไม่สามารถลบไฟล์ได้');
+            }
+            
+            showLoading(false);
+        }
+
+        // Save all changes
+        function saveAllChanges() {
+            const data = loadData();
+            
+            // Save general settings
+            data.logoType = document.getElementById('logoTypeSelect').value;
+            
+            if (data.logoType === 'text') {
+                data.logo = document.getElementById('logoInput').value;
+                data.logoImage = null;
+            } else {
+                if (window.tempLogoImage) {
+                    data.logoImage = window.tempLogoImage;
+                }
+            }
+            
+            data.title = document.getElementById('titleInput').value;
+            data.description = document.getElementById('descInput').value;
+            data.footer = document.getElementById('footerInput').value;
+            
+            saveData(data);
+            
+            // Save auth if changed
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newUsername || newPassword) {
+                if (newPassword !== confirmPassword) {
+                    alert('รหัสผ่านไม่ตรงกัน');
+                    return;
+                }
+                
+                const auth = {
+                    username: newUsername || loadAuth().username,
+                    password: newPassword || loadAuth().password
+                };
+                
+                localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
+                
+                // Clear password fields
+                document.getElementById('newUsername').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            }
+            
+            showSuccess();
+        }
+
+        // Load auth
+        function loadAuth() {
+            const saved = localStorage.getItem(AUTH_KEY);
+            return saved ? JSON.parse(saved) : DEFAULT_CREDENTIALS;
+        }
+
+        // Show/hide loading
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (show) {
+                overlay.classList.add('active');
+            } else {
+                overlay.classList.remove('active');
+            }
+        }
+
+        // Show success message
+        function showSuccess() {
+            const msg = document.getElementById('successMessage');
+            msg.classList.add('show');
+            setTimeout(() => {
+                msg.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize
+        window.onload = () => {
+            checkLogin();
+            gapiLoaded();
+            gisLoaded();
+        };
+    </script>
+</body>
+</html>
