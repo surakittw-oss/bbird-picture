@@ -581,17 +581,20 @@
 
                 <div class="url-examples">
                     <strong>📋 ตัวอย่าง URL ที่ใช้ได้:</strong>
-                    <code>https://drive.google.com/file/d/xxx/view</code>
+                    <code>https://drive.google.com/file/d/xxx/view?usp=sharing</code>
                     <code>https://lh3.googleusercontent.com/xxx</code>
                     <code>https://i.imgur.com/xxx.jpg</code>
                     <code>https://example.com/image.jpg</code>
                     
                     <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e5e7;">
-                        <strong>🔗 วิธีดึง URL จาก Google Drive:</strong><br>
+                        <strong>🔗 วิธีดึง URL จาก Google Drive (สำคัญ!):</strong><br>
                         1. เปิดรูปใน Google Drive<br>
-                        2. คลิกขวา → <a href="#" onclick="alert('คลิก Share → Anyone with the link → Copy link'); return false;">Get link</a><br>
-                        3. เปลี่ยนเป็น "Anyone with the link"<br>
-                        4. Copy link มาวางที่นี่
+                        2. คลิกขวา → <strong>Share</strong> (หรือไอคอนแชร์)<br>
+                        3. เปลี่ยนเป็น <strong>"Anyone with the link"</strong> ← สำคัญมาก!<br>
+                        4. คลิก <strong>Copy link</strong><br>
+                        5. วางที่นี่แล้วกด "เพิ่มรูป"<br><br>
+                        
+                        <strong style="color: #ff3b30;">⚠️ ถ้าไม่แชร์เป็น "Anyone with the link" รูปจะไม่แสดง!</strong>
                     </div>
                 </div>
             </div>
@@ -788,18 +791,23 @@
 
         // Convert Google Drive URL to direct image URL
         function convertGoogleDriveUrl(url) {
-            // Pattern: https://drive.google.com/file/d/FILE_ID/view
-            const driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            // Remove any query parameters first to get clean URL
+            const cleanUrl = url.split('?')[0];
+            
+            // Pattern 1: https://drive.google.com/file/d/FILE_ID/view
+            let driveMatch = cleanUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (!driveMatch) {
+                // Pattern 2: https://drive.google.com/open?id=FILE_ID
+                driveMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            }
+            
             if (driveMatch) {
-                return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+                const fileId = driveMatch[1];
+                // Use Google Drive thumbnail endpoint which works better for images
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`;
             }
             
-            // Pattern: https://drive.google.com/open?id=FILE_ID
-            const openMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-            if (openMatch) {
-                return `https://drive.google.com/uc?export=view&id=${openMatch[1]}`;
-            }
-            
+            // If it's already a direct image URL or other service, return as-is
             return url;
         }
 
@@ -813,13 +821,17 @@
                 return;
             }
             
+            // Check if it's a Google Drive URL
+            const isGoogleDrive = url.includes('drive.google.com');
+            
             // Convert Google Drive URLs
+            const originalUrl = url;
             url = convertGoogleDriveUrl(url);
             
             const data = loadData();
             
             // Check if URL already exists
-            if (data.images.some(img => img.url === url)) {
+            if (data.images.some(img => img.url === url || img.originalUrl === originalUrl)) {
                 alert('รูปภาพนี้มีอยู่แล้ว');
                 return;
             }
@@ -828,7 +840,9 @@
             const imageObj = {
                 id: Date.now().toString(),
                 url: url,
-                name: `Image ${data.images.length + 1}`
+                originalUrl: originalUrl,
+                name: `Image ${data.images.length + 1}`,
+                isGoogleDrive: isGoogleDrive
             };
             
             data.images.push(imageObj);
@@ -838,7 +852,12 @@
             // Clear input
             input.value = '';
             
-            showSuccess();
+            // Show success with helpful message
+            if (isGoogleDrive) {
+                showSuccessWithMessage('เพิ่มรูปจาก Google Drive แล้ว! ถ้ารูปไม่แสดง ตรวจสอบว่าได้แชร์เป็น "Anyone with the link" แล้ว');
+            } else {
+                showSuccess();
+            }
         }
 
         // Render image preview
@@ -996,10 +1015,33 @@
         // Show success message
         function showSuccess() {
             const msg = document.getElementById('successMessage');
+            msg.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                บันทึกสำเร็จ!
+            `;
             msg.classList.add('show');
             setTimeout(() => {
                 msg.classList.remove('show');
             }, 3000);
+        }
+
+        // Show success with custom message
+        function showSuccessWithMessage(message) {
+            const msg = document.getElementById('successMessage');
+            msg.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                ${message}
+            `;
+            msg.style.maxWidth = '400px';
+            msg.classList.add('show');
+            setTimeout(() => {
+                msg.classList.remove('show');
+                msg.style.maxWidth = '';
+            }, 5000);
         }
 
         // Handle Enter key in URL input
