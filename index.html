@@ -146,6 +146,19 @@
         footer p {
             color: #6e6e73;
             font-size: 14px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            footer {
+                padding: 32px 20px;
+                margin-top: 60px;
+            }
+
+            footer p {
+                font-size: 13px;
+            }
         }
 
         /* Lightbox */
@@ -338,6 +351,14 @@
 
             .nav-links a {
                 display: none;
+            }
+
+            .nav-content {
+                justify-content: center;
+            }
+
+            .logo {
+                font-size: 22px;
             }
         }
 
