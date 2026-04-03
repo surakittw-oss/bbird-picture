@@ -539,8 +539,9 @@
                         <path d="M12 16v-4"></path>
                         <path d="M12 8h.01"></path>
                     </svg>
-                    <strong>วิธีใช้:</strong> คัดลอก URL รูปภาพจาก Google Drive, Imgur, หรือที่ไหนก็ได้ แล้ววางที่นี่<br>
+                    <strong>วิธีใช้:</strong> คัดลอก URL รูปภาพแล้ววางที่นี่<br>
                     <strong>Google Drive:</strong> Share → Anyone with the link → Copy link<br>
+                    <strong>Facebook:</strong> คลิกขวาที่รูป → Copy Image Address (ต้องเป็น scontent.fbcdn.net)<br>
                     <strong>Imgur:</strong> คลิกขวาที่รูป → Copy image address
                 </div>
 
@@ -843,6 +844,40 @@
             return url;
         }
 
+        // Convert Facebook URL
+        function convertFacebookUrl(url) {
+            // Facebook photo URL patterns:
+            // https://www.facebook.com/photo/?fbid=xxxxx
+            // https://www.facebook.com/username/photos/xxxxx
+            // https://scontent.fbkk.fna.fbcdn.net/v/...
+            
+            // If it's already a direct CDN link (scontent), use as-is
+            if (url.includes('scontent') || url.includes('fbcdn.net')) {
+                return url;
+            }
+            
+            // For facebook.com photo URLs, inform user to get direct image link
+            if (url.includes('facebook.com/photo')) {
+                log('Facebook photo URL detected - need direct image link');
+                return url; // Keep original, will show error message to user
+            }
+            
+            return url;
+        }
+
+        // Convert any supported URL format
+        function convertImageUrl(url) {
+            // Check what type of URL it is and convert accordingly
+            if (url.includes('drive.google.com')) {
+                return convertGoogleDriveUrl(url);
+            } else if (url.includes('facebook.com') || url.includes('fbcdn.net')) {
+                return convertFacebookUrl(url);
+            }
+            
+            // Return as-is for other URLs (Imgur, direct links, etc.)
+            return url;
+        }
+
         // Add image from URL
         function addImageFromUrl() {
             log('=== ADD IMAGE FUNCTION CALLED ===');
@@ -859,11 +894,18 @@
                 }
                 
                 const isGoogleDrive = url.includes('drive.google.com');
+                const isFacebook = url.includes('facebook.com') || url.includes('fbcdn.net');
                 const originalUrl = url;
-                url = convertGoogleDriveUrl(url);
+                url = convertImageUrl(url);
                 
                 log('Converted URL:', url);
-                log('Is Google Drive:', isGoogleDrive);
+                log('Is Google Drive:', isGoogleDrive, 'Is Facebook:', isFacebook);
+                
+                // Special handling for Facebook page URLs
+                if (isFacebook && url.includes('facebook.com/photo')) {
+                    alert('⚠️ ลิงก์ Facebook ที่ใช้ไม่ได้!\n\nวิธีที่ถูกต้อง:\n1. เปิดรูปใน Facebook\n2. คลิกขวาที่รูป → "Copy Image Address"\n3. จะได้ URL ที่ขึ้นต้นด้วย scontent.fbcdn.net\n4. วาง URL นั้นมาที่นี่');
+                    return;
+                }
                 
                 const data = loadData();
                 
@@ -883,7 +925,8 @@
                     url: url,
                     originalUrl: originalUrl,
                     name: `Image ${data.images.length + 1}`,
-                    isGoogleDrive: isGoogleDrive
+                    isGoogleDrive: isGoogleDrive,
+                    isFacebook: isFacebook
                 };
                 
                 log('Adding image:', imageObj);
@@ -896,9 +939,13 @@
                 
                 input.value = '';
                 
-                showSuccess(isGoogleDrive ? 
-                    'เพิ่มรูปแล้ว! (Google Drive: ตรวจสอบการแชร์)' : 
-                    'เพิ่มรูปสำเร็จ!');
+                if (isGoogleDrive) {
+                    showSuccess('เพิ่มรูปจาก Google Drive แล้ว!');
+                } else if (isFacebook) {
+                    showSuccess('เพิ่มรูปจาก Facebook แล้ว!');
+                } else {
+                    showSuccess('เพิ่มรูปสำเร็จ!');
+                }
                 
                 log('=== ADD IMAGE COMPLETE ===');
                 
